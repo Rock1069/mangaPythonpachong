@@ -1,0 +1,31 @@
+[Unit]
+Description=漫画柜阅读器 API 服务
+After=network.target
+
+[Service]
+Type=simple
+User=manga
+Group=manga
+WorkingDirectory=/opt/manga-reader
+ExecStart=/opt/manga-reader/venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=5
+Environment="MANGA_HOST=0.0.0.0"
+Environment="MANGA_PORT=8000"
+Environment="MANGA_PAGE_DELAY=1.0"
+
+# 安全加固
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/manga-reader
+ReadOnlyPaths=/usr
+
+# 日志
+StandardOutput=journald
+StandardError=journald
+SyslogIdentifier=manga-reader
+
+[Install]
+WantedBy=multi-user.target
